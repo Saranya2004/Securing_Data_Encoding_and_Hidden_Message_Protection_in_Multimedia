@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Image Steganography - Decode</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <div class="back-to-main">
+        <a href="http://127.0.0.1:5500/Main%20Login%20page/mainloginpage.html"><i class="fas fa-arrow-left"></i> Back to Main Page</a>
+      </div>
+      
+    <header>
+        <h1>Image Steganography - Decoding</h1>
+        <p>Upload an image to extract the hidden message.</p>
+    </header>
+
+    <div class="container">
+        <input type="file" id="decodeFile" accept="image/*">
+        <input type="password" id="password2" placeholder="Enter password (if needed)">
+
+        <div class="button-container">
+            <button id="startDecode" class="btn decode">🔓 Start Decoding</button>
+            <button id="backHome" class="btn">🔙 Back</button>
+        </div>
+
+        <!-- Reveal message section -->
+        <div id="messageDecoded" class="output">
+            <h2>Decoded Message:</h2>
+            <p id="revealedMessage">No message extracted yet.</p>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById("backHome").addEventListener("click", function() {
+            window.location.href = "index.html";
+        });
+
+        document.getElementById("startDecode").addEventListener("click", function() {
+            let fileInput = document.getElementById("decodeFile");
+            if (fileInput.files.length === 0) {
+                alert("Please select an image to decode.");
+                return;
+            }
+
+            let file = fileInput.files[0];
+            let password = document.getElementById("password2").value;
+            let reader = new FileReader();
+
+            reader.onload = function(event) {
+                let img = new Image();
+                img.src = event.target.result;
+                img.onload = function() {
+                    let canvas = document.createElement("canvas");
+                    let ctx = canvas.getContext("2d");
+                    canvas.width = img.width;
+                    canvas.height = img.height;
+                    ctx.drawImage(img, 0, 0);
+
+                    let imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+                    let message = extractHiddenMessage(imageData); // ✅ Fixed function call
+
+                    if (!message) {
+                        alert("No hidden message found!");
+                        return;
+                    }
+
+                    if (password.length > 0) {
+                        try {
+                            message = sjcl.decrypt(password, message);
+                        } catch (error) {
+                            alert("Invalid password or corrupted data.");
+                            return;
+                        }
+                    }
+
+                    document.getElementById("revealedMessage").textContent = message;
+                };
+            };
+
+            reader.readAsDataURL(file);
+        });
+    </script>
+
+    <script src="sjcl.js"></script>
+    <script src="script.js" defer></script>
+</body>
+</html>

@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Extract Message - Audio Steganography</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="audio.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+</head>
+<body>
+
+  <div class="back-to-main">
+    <a href="http://127.0.0.1:5500/Main%20Login%20page/mainloginpage.html"><i class="fas fa-arrow-left"></i> Back to Main Page</a>
+  </div>
+  
+  <header>
+    <h1>🔍 Extract Message</h1>
+    <p>Upload a stego MP3 file to reveal the hidden message</p>
+  </header>
+
+  <div class="container">
+    <input type="file" id="mp3Input" accept=".mp3">
+    <input type="password" id="password" placeholder="Password (if any)">
+    
+    <div class="button-container">
+      <button id="extractNow" class="btn decode">Extract Now</button>
+      <button onclick="window.location.href='index.html'" class="btn encode">Back</button>
+    </div>
+
+    <textarea id="messageOutput" placeholder="Your hidden message will appear here..." readonly></textarea>
+
+    <div class="button-container">
+      <button id="copyBtn" class="btn download">📋 Copy Message</button>
+    </div>
+  </div>
+
+  <!-- Include scripts -->
+  <script src="src/app/cryptojs.min.js"></script>
+  <script src="src/app/helpers.js"></script>
+  <script src="src/app/base32.js"></script>
+  <script src="src/app/mp3parser.js"></script>
+  <script src="src/app/mp3stego.js"></script>
+  <script src="src/app/extract.js"></script>
+</body>
+</html>

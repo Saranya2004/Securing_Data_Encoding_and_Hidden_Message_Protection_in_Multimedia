@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Encoding Process</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+</head>
+<body>
+    <div class="back-to-main">
+        <a href="http://127.0.0.1:5500/Main%20Login%20page/mainloginpage.html"><i class="fas fa-arrow-left"></i> Back to Main Page</a>
+      </div>
+      
+    <header>
+        <h1>Encoding Process</h1>
+        <p>Upload an image and hide a secret message.</p>
+    </header>
+
+    <div class="container">
+        <input type="file" id="encodeFile" accept="image/*">
+        <textarea id="message" placeholder="Enter message to hide"></textarea>
+        <input type="password" id="password" placeholder="Enter password (optional)">
+
+        <div class="button-container">
+            <button id="startEncode" class="btn encode">Start Encoding</button>
+            <button id="downloadEncoded" class="btn download">⬇ Download</button>
+            <button id="backHome" class="btn">🔙 Back</button>
+        </div>
+
+        <img id="encodedPreview" class="preview hide">
+    </div>
+
+    <canvas id="canvas" class="hide"></canvas>
+
+    <script>
+        document.getElementById("backHome").addEventListener("click", function() {
+            window.location.href = "index.html";
+        });
+
+        document.getElementById("startEncode").addEventListener("click", function() {
+            let fileInput = document.getElementById("encodeFile");
+            let message = document.getElementById("message").value;
+            let password = document.getElementById("password").value;
+            let canvas = document.getElementById("canvas");
+            let ctx = canvas.getContext("2d");
+
+            if (fileInput.files.length === 0) {
+                alert("Please select an image.");
+                return;
+            }
+
+            let file = fileInput.files[0];
+            let reader = new FileReader();
+
+            reader.onload = function(event) {
+                let img = new Image();
+                img.src = event.target.result;
+
+                img.onload = function() {
+                    canvas.width = img.width;
+                    canvas.height = img.height;
+                    ctx.drawImage(img, 0, 0);
+
+                    let imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+
+                    if (password.length > 0) {
+                        message = sjcl.encrypt(password, message);
+                    } else {
+                        message = JSON.stringify({ text: message });
+                    }
+
+                    encodeMessage(imageData.data, message); // ✅ Ensure function modifies imageData
+                    ctx.putImageData(imageData, 0, 0);
+
+                    document.getElementById("encodedPreview").src = canvas.toDataURL();
+                    document.getElementById("encodedPreview").style.display = "block";
+                };
+            };
+
+            reader.readAsDataURL(file);
+        });
+
+        document.getElementById("downloadEncoded").addEventListener("click", function() {
+            let link = document.createElement("a");
+            link.download = "encoded_image.png";
+            link.href = document.getElementById("encodedPreview").src;
+            link.click();
+        });
+    </script>
+
+    <script src="sjcl.js"></script>
+    <script src="script.js" defer></script>
+</body>
+</html>

@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Embed Message - Audio Steganography</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="audio.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+</head>
+<body>
+
+  <div class="back-to-main">
+    <a href="http://127.0.0.1:5500/Main%20Login%20page/mainloginpage.html"><i class="fas fa-arrow-left"></i> Back to Main Page</a>
+  </div>
+  
+  <header>
+    <h1>🔐 Embed Message</h1>
+    <p>Hide your secret message inside an MP3 file</p>
+  </header>
+
+  <div class="container">
+    <input type="file" id="mp3Input" accept=".mp3">
+    <textarea id="secretMessage" placeholder="Type your secret message..."></textarea>
+    <input type="password" id="password" placeholder="Password (optional)">
+    
+    <div class="button-container">
+      <button id="embedNow" class="btn encode">Embed Now</button>
+      <button onclick="window.location.href='index.html'" class="btn decode">Back</button>
+    </div>
+    <br>
+    <br>
+    
+    <div id="downloadBox" class="hide">
+      <button id="downloadBtn" class="btn download">⬇️ Download MP3</button>
+    </div>
+  </div>
+
+  <!-- Include scripts -->
+  <script src="src/app/cryptojs.min.js"></script>
+  <script src="src/app/helpers.js"></script>
+  <script src="src/app/base32.js"></script>
+  <script src="src/app/mp3parser.js"></script>
+  <script src="src/app/mp3stego.js"></script>
+  <script src="src/app/main.js"></script>
+</body>
+</html>
